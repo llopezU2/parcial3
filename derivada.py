@@ -1,19 +1,28 @@
-def primera_derivada(f_values, h):
+def calcular_derivada(formula, h, valores_predefinidos):
     """
-    Calcula la primera derivada utilizando la fórmula:
-    f'(xi) = (-f(xi+2) + 8*f(xi+1) - 8*f(xi-1) + f(xi-2)) / (12*h)
+    Calcula la derivada basada en una fórmula proporcionada por el usuario.
 
     Parámetros:
-    - f_values (dict): Diccionario con los valores de la función en los puntos.
-    - h (float): Paso o altura.
+    - formula (str): Fórmula ingresada por el usuario en términos de xi+2, xi+1, xi, xi-1, xi-2.
+    - h (float): Paso o altura proporcionada por el usuario.
+    - valores_predefinidos (dict): Diccionario con los valores predefinidos de xi y f(x).
 
     Retorna:
-    - float: Valor de la derivada.
+    - float: El resultado de la derivada calculada.
     """
-    # Validar que todas las claves están presentes
-    if not all(key in f_values for key in ['xi+2', 'xi+1', 'xi-1', 'xi-2']):
-        raise ValueError("El diccionario 'f_values' debe contener las claves: 'xi+2', 'xi+1', 'xi-1', 'xi-2'")
-    
-    # Calcular la derivada
-    derivada = (-f_values['xi+2'] + 8*f_values['xi+1'] - 8*f_values['xi-1'] + f_values['xi-2']) / (12 * h)
-    return derivada
+    # Validar que los términos de la fórmula existen en los valores predefinidos
+    for termino in ['xi+2', 'xi+1', 'xi', 'xi-1', 'xi-2']:
+        if termino in formula and termino not in valores_predefinidos:
+            raise ValueError(f"El término {termino} no está en los valores predefinidos.")
+
+    # Reemplazar los valores predefinidos en la fórmula
+    for key, value in valores_predefinidos.items():
+        formula = formula.replace(key, str(value['f(x)']))
+
+    # Evaluar la fórmula
+    try:
+        resultado = eval(formula)  # Evaluar la fórmula con los valores reemplazados
+    except Exception as e:
+        raise ValueError(f"Error al evaluar la fórmula: {e}")
+
+    return resultado
